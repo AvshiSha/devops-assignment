@@ -49,22 +49,20 @@ async function run() {
       core.info('README.md not found at repo root, creating a new one.');
     }
 
-    // Add a separator so we clearly see new runs
-    const newContent =
-      (readmeContent.trim() ? readmeContent.trim() + '\n\n' : '') +
-      '<!-- API_STATUS_START -->\n' +
-      markdown +
-      '\n' + '<!-- API_STATUS_END -->\n';
+    const startMarker = '<!-- API-STATUS-START -->';
+    const endMarker = '<!-- API-STATUS-END -->';
+
+    const block = `${startMarker}\n${markdown}\n${endMarker}`;
      
     if (readmeContent.includes(startMarker) && readmeContent.includes(endMarker)) {
       // Replace old block
       core.info('Found existing status block. Replacing...');
       const regex = new RegExp(`${startMarker}[\\s\\S]*?${endMarker}`, 'm');
-      readmeContent = readmeContent.replace(regex, newContent);
+      readmeContent = readmeContent.replace(regex, block);
     } else {
       // Append new block at bottom
       core.info('No existing status block found. Appending new block.');
-      readmeContent = readmeContent.trim() + `\n\n${newContent}\n`;
+      readmeContent = readmeContent.trim() + `\n\n${block}\n`;
     }
 
     fs.writeFileSync(readmePath, readmeContent, 'utf8');
