@@ -52,9 +52,9 @@ async function run() {
     // Add a separator so we clearly see new runs
     const newContent =
       (readmeContent.trim() ? readmeContent.trim() + '\n\n' : '') +
-      '<!-- API-STATUS-RUN -->\n' +
+      '<!-- API_STATUS_START -->\n' +
       markdown +
-      '\n';
+      '\n' + '<!-- /API_STATUS_END -->\n';
 
     fs.writeFileSync(readmePath, newContent, 'utf8');
     core.info(`README.md updated at: ${readmePath}`);
