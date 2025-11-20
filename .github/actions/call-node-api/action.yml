@@ -1,0 +1,12 @@
+name: "Call Node API and Update README"
+description: "Calls a given API URL, prints a markdown summary, and updates README.md"
+author: "Avshi"
+
+inputs:
+  api-url:
+    description: "The API URL to call"
+    required: true
+
+runs:
+  using: "node20"
+  main: "index.js"
