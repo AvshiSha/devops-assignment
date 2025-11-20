@@ -56,18 +56,18 @@ async function run() {
       markdown +
       '\n' + '<!-- API_STATUS_END -->\n';
      
-    if (readme.includes(startMarker) && readme.includes(endMarker)) {
+    if (readmeContent.includes(startMarker) && readmeContent.includes(endMarker)) {
       // Replace old block
       core.info('Found existing status block. Replacing...');
       const regex = new RegExp(`${startMarker}[\\s\\S]*?${endMarker}`, 'm');
-      readme = readme.replace(regex, block);
+      readmeContent = readmeContent.replace(regex, newContent);
     } else {
       // Append new block at bottom
       core.info('No existing status block found. Appending new block.');
-      readme = readme.trim() + `\n\n${block}\n`;
+      readmeContent = readmeContent.trim() + `\n\n${newContent}\n`;
     }
 
-    fs.writeFileSync(readmePath, newContent, 'utf8');
+    fs.writeFileSync(readmePath, readmeContent, 'utf8');
     core.info(`README.md updated at: ${readmePath}`);
   } catch (error) {
     core.setFailed(error.message);
