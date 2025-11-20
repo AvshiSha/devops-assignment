@@ -1,0 +1,73 @@
+name: Call API and Update README
+
+on:
+  workflow_dispatch:
+    inputs:
+      # Optional: Define inputs for the manual trigger
+      environment:
+        description: "Target environment"
+        required: true
+        default: "dev"
+      message:
+        description: "Custom message for the run"
+        required: false
+        type: string
+
+permissions:
+  contents: write
+
+jobs:
+  call-api:
+    runs-on: ubuntu-latest
+
+    steps:
+      # check the repository
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # install Node.js
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      # install project dependencies
+      - name: Install dependencies
+        run: npm install
+
+      # start the Node.js API in the background
+      #    assumes "npm start" runs your API on http://localhost:3000
+      - name: Start API server
+        run: |
+          npm start &
+          echo "Waiting for API to be ready..."
+          n=0
+          until curl -sSf http://localhost:3000/status > /dev/null || [ $n -ge 30 ]; do
+            n=$((n+1))
+            echo "Still waiting... ($n)"
+            sleep 2
+          done
+          echo "API is up!"
+
+      # call your custom GitHub Action
+      - name: Call custom API action
+        uses: ./.github/actions/call-node-api
+        with:
+          api-url: http://localhost:3000/status
+
+      # commit the updated README.md back into the repository
+      - name: Commit README changes
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          if [[ -n "$(git status --porcelain README.md)" ]]; then
+            echo "README.md changed, committing..."
+            git config user.name "github-actions[bot]"
+            git config user.email "github-actions[bot]@users.noreply.github.com"
+            git add README.md
+            git commit -m "Update README with API status"
+            git push
+          else
+            echo "No changes in README.md, nothing to commit."
+          fi
