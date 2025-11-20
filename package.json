@@ -1,0 +1,14 @@
+{
+  "name": "devops-assignment",
+  "version": "1.0.0",
+  "description": "A simple DevOps assignment API",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js"
+  },
+  "dependencies": {
+    "express": "^4.21.2"
+  },
+  "author": "",
+  "license": "ISC"
+}
