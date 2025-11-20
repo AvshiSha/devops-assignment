@@ -49,8 +49,8 @@ async function run() {
       core.info('README.md not found at repo root, creating a new one.');
     }
 
-    const startMarker = '<!-- API-STATUS-START -->';
-    const endMarker = '<!-- API-STATUS-END -->';
+    const startMarker = '<!-- API_STATUS_START -->';
+    const endMarker = '<!-- API_STATUS_END -->';
 
     const block = `${startMarker}\n${markdown}\n${endMarker}`;
      
