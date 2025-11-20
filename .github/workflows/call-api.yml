@@ -2,16 +2,6 @@ name: Call API and Update README
 
 on:
   workflow_dispatch:
-    inputs:
-      # Optional: Define inputs for the manual trigger
-      environment:
-        description: "Target environment"
-        required: true
-        default: "dev"
-      message:
-        description: "Custom message for the run"
-        required: false
-        type: string
 
 permissions:
   contents: write
